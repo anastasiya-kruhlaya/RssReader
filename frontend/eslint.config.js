@@ -19,18 +19,40 @@ export default [
         },
         },
         plugins: {
-        react: pluginReact,
+            react: pluginReact,
+            'react-hooks': reactHooksPlugin,
+            import: importPlugin,
         },
         rules: {
-        ...pluginReact.configs.flat.recommended.rules,
-        "react/react-in-jsx-scope": "off",
-        "react/jsx-uses-react": "off",
-        "react/prop-types": "off"
+            ...reactPlugin.configs.recommended.rules,
+            ...reactHooksPlugin.configs.recommended.rules,
+            "react/react-in-jsx-scope": "off",
+            "react/jsx-uses-react": "off",
+            "react/prop-types": "off",
+            'eqeqeq': ['error', 'always'],
+            'no-var': 'error',
+            'prefer-const': 'error',
+            'no-console': ['warn', { allow: ['warn', 'error'] }],
+            'import/no-unresolved': ['error', { commonjs: true, amd: true }],
+            'import/order': [
+                'error',
+                {
+                groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+                'newlines-between': 'always',
+                alphabetize: { order: 'asc', caseInsensitive: true },
+                },
+            ],
+            'import/no-duplicates': 'error',
         },
         settings: {
-        react: {
-            version: "detect",
-        },
+            'import/resolver': {
+                webpack: {
+                config: 'webpack.config.js', 
+                },
+            },
+            react: {
+                version: "detect",
+            },
         },
     },
 
@@ -49,4 +71,6 @@ export default [
     {
         ignores: ["build/**", "node_modules/**", "dist/**"],
     },
+
+    prettier,
 ];

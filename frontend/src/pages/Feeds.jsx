@@ -1,0 +1,64 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { getFeeds, removeFeed } from 'Actions/feedsActions';
+import FeedForm from 'Components/feeds/FeedForm';
+import { getFolders } from '../reducers/foldersReducer';
+import AddToFolderMenu from '../components/feeds/AddToFolderMenu';
+
+export default function Feeds() {
+    const dispatch = useDispatch();
+    const { list: feeds, loading, error } = useSelector((state) => state.feeds);
+    const [editingFeed, setEditingFeed] = useState(null);
+
+    useEffect(() => {
+        dispatch(getFeeds());
+        dispatch(getFolders());
+    }, [dispatch]);
+
+    const handleDelete = (id) => {
+        if (window.confirm('Delete this feed and all its items?')) {
+            dispatch(removeFeed(id));
+        }
+    };
+
+    return (
+        <div className="page">
+            <section className="section">
+                <div className="section-header">
+                    <h2>Feeds</h2>
+                    {editingFeed !== 'new' && (
+                        <button onClick={() => setEditingFeed('new')}>+ Create Feed</button>
+                    )}
+                </div>
+
+                {(editingFeed === 'new' || (editingFeed && editingFeed !== 'new')) && (
+                    <FeedForm
+                        editingFeed={editingFeed === 'new' ? null : editingFeed}
+                        onDone={() => setEditingFeed(null)}
+                    />
+                )}
+
+                {loading && <p className="empty-text">Loading feeds...</p>}
+                {error && <p className="error-text">{error}</p>}
+                {!loading && feeds.length === 0 && (
+                    <p className="empty-text">No feeds yet — create your first one above.</p>
+                )}
+
+                {feeds.map((feed) => (
+                    <div className="feed-item" key={feed.id}>
+                        <Link to={`/feeds/${feed.id}`} className="feed-item__title">
+                            {feed.title || feed.url}
+                        </Link>
+                        <span className="feed-item__count">{feed.totalNewsCount ?? 0} news</span>
+                        <div className="feed-item__actions">
+                            <AddToFolderMenu feedId={feed.id} />
+                            <button className="ghost" onClick={() => setEditingFeed(feed)}>Edit</button>
+                            <button className="danger" onClick={() => handleDelete(feed.id)}>Delete</button>
+                        </div>
+                    </div>
+                ))}
+            </section>
+        </div>
+    );
+}

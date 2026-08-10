@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace RssReader.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 [Route("api/feeds")]
 public class FeedController(IFeedService feedService) : ControllerBase
 {
@@ -32,9 +32,16 @@ public class FeedController(IFeedService feedService) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateFeedAsync(CreateFeedDto createFeedDto, CancellationToken ct)
     {
-        var result = await feedService.CreateFeedAsync(createFeedDto, ct);
+        try
+        {
+            var result = await feedService.CreateFeedAsync(createFeedDto, ct);
         
-        return Ok(result);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
     }
 
     [HttpPut("{feedId:int}")]

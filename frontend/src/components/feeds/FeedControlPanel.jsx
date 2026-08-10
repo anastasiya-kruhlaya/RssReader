@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addFeed, editFeed } from 'Actions/feedsActions';
+import { addFeed, editFeed, removeFeed } from 'Actions/feedsActions';
 
-export default function FeedForm({ editingFeed, onDone }) {
+export default function FeedControlPanel({ editingFeed, onDone }) {
     const dispatch = useDispatch();
     const [url, setUrl] = useState(editingFeed?.url || '');
     const [error, setError] = useState(null);
+
     const isEditing = Boolean(editingFeed);
 
     const handleSubmit = async (e) => {
@@ -27,17 +28,33 @@ export default function FeedForm({ editingFeed, onDone }) {
     };
 
     return (
-        <form className="form-row" onSubmit={handleSubmit}>
+        <form className="control-form" onSubmit={handleSubmit}>
             <input
+                className="control-form__input"
                 type="url"
                 placeholder="https://example.com/rss"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 required
             />
-            <button type="submit">{isEditing ? 'Save' : 'Create Feed'}</button>
-            <button type="button" className="ghost" onClick={onDone}>Cancel</button>
-            {error && <p className="error-text">{error}</p>}
+            <div className="control-form__actions">
+                <button type="submit" className="btn btn--primary">
+                    {isEditing ? 'Save' : 'Add Feed'}
+                </button>
+                <button type="button" className="btn btn--ghost" onClick={onDone}>
+                    Cancel
+                </button>
+            </div>
+            {error && <p className="control-form__error">{error}</p>}
         </form>
     );
+}
+
+export function useDeleteFeed() {
+    const dispatch = useDispatch();
+    return (id) => {
+        if (window.confirm('Remove this feed?')) {
+            dispatch(removeFeed(id));
+        }
+    };
 }

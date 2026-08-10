@@ -1,8 +1,8 @@
 export {
-    fetchFeeds,
+    getFeeds,
     addFeed,
     editFeed,
     removeFeed,
     selectFeed,
     clearFeedsError,
-} from '../reducers/feedsSlice';
+} from '../reducers/feedsReducer';

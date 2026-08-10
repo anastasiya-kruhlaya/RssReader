@@ -1,0 +1,247 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: #f7f8fa;
+    color: #1a1d23;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    background: #3b6ef6;
+    color: white;
+
+    &:hover {
+        background: #2d56d6;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+button.ghost {
+    background: transparent;
+    color: #6b7280;
+    border: 1px solid #e2e5ea;
+
+    &:hover {
+        background: #f0f1f3;
+    }
+}
+
+button.danger {
+    background: transparent;
+    color: #e5484d;
+    border: 1px solid #e2e5ea;
+
+    &:hover {
+        background: rgba(229, 72, 77, 0.08);
+    }
+}
+
+input {
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid #e2e5ea;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.navMenu {
+    background: white;
+    border-bottom: 1px solid #e2e5ea;
+    padding: 0 20px;
+
+    ul {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        height: 50px;
+    }
+
+    a.active {
+        color: #3b6ef6;
+        font-weight: 600;
+    }
+}
+
+.navMenu__spacer {
+    flex: 1;
+}
+
+.user-menu {
+    position: relative;
+
+    &__trigger {
+        background: transparent;
+        color: #1a1d23;
+        border: 1px solid #e2e5ea;
+    }
+
+    &__dropdown {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        background: white;
+        border: 1px solid #e2e5ea;
+        border-radius: 6px;
+        min-width: 160px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 6px;
+        z-index: 10;
+
+        a, button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 8px 10px;
+        background: transparent;
+        color: #1a1d23;
+        border-radius: 4px;
+
+        &:hover {
+            background: #f7f8fa;
+        }
+        }
+    }
+
+    &__logout {
+        color: #e5484d !important;
+    }
+}
+
+.page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.section {
+    background: white;
+    border: 1px solid #e2e5ea;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.feed-item,
+.item-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e5ea;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.feed-item__title {
+    font-weight: 500;
+    flex: 1;
+}
+
+.feed-item__count {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.feed-item__actions {
+    display: flex;
+    gap: 6px;
+}
+
+.item-card {
+    flex-direction: column;
+    align-items: flex-start;
+
+    button {
+        margin-top: 6px;
+    }
+}
+
+.form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.error-text {
+    color: #e5484d;
+    font-size: 13px;
+}
+
+.empty-text {
+    color: #6b7280;
+    font-size: 14px;
+    padding: 16px 0;
+    text-align: center;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid #e2e5ea;
+    margin-top: 40px;
+}
+
+.add-to-folder {
+    position: relative;
+    display: inline-block;
+
+    &__list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border: 1px solid #e2e5ea;
+        border-radius: 6px;
+        min-width: 140px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 6px;
+        z-index: 10;
+
+        button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        color: #1a1d23;
+        padding: 6px 8px;
+
+        &:hover {
+            background: #f7f8fa;
+        }
+        }
+    }
+}

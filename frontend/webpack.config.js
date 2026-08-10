@@ -1,4 +1,4 @@
-// const path = require("path");
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 
@@ -18,37 +18,43 @@ module.exports = {
         filename: `${pkg.version}/js/[name].[chunkhash:8].js`,
         chunkFilename: `${pkg.version}/js/[name].[chunkhash:8].js`,
         assetModuleFilename: isDebug
-        ? `images/[path][name].[contenthash:8][ext]`
-        : `images/[path][contenthash:8][ext]`,
+            ? `images/[path][name].[contenthash:8][ext]`
+            : `images/[path][contenthash:8][ext]`,
         crossOriginLoading: "anonymous",
     },
     plugins: [
         new Dotenv(),
         new HtmlWebpackPlugin({
-        template: "public/index.html",
-        filename: "index.html",
+            template: "public/index.html",
+            filename: "index.html",
         })
     ],
     devServer: {
         port: port,
         static: {
-        directory: commonPaths.outputPath,
+            directory: commonPaths.outputPath,
         },
-        historyApiFallback: {
-        index: "index.html",
-        },
+        historyApiFallback: true,
         webSocketServer: false,
     },
     module: {
         rules: [
-        {
-            test: /\.(js|jsx)$/,
-            exclude: /node_modules/, // exclude node_modules
-            use: ["babel-loader"],
-        },
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node_modules/,
+                use: ["babel-loader"],
+            },
+            {
+                test: /\.scss$/,
+                use: ["style-loader", "css-loader", "sass-loader"],
+            },
         ],
     },
     resolve: {
         extensions: ["*", ".js", ".jsx"],
+        alias: {
+            Components: path.resolve(__dirname, "src/components"),
+            Actions: path.resolve(__dirname, "src/actions"), 
+        }
     },
 };

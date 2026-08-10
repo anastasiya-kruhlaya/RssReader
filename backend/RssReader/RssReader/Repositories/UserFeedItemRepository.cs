@@ -31,7 +31,8 @@ public class UserFeedItemRepository(RssReaderDbContext context) : IUserFeedItemR
 
     public async Task MarkAsFavoriteAsync(int userId, int feedItemId, bool isFavorite, CancellationToken ct = default)
     {
-        var userFeedItem = await GetAsync(userId, feedItemId, ct);
+        var userFeedItem = await GetAsync(userId, feedItemId, ct)
+            ?? await CreateAsync(userId, feedItemId, ct);
         if(userFeedItem is null)
         {
             throw new KeyNotFoundException($"{userId} doesn't have {feedItemId} feedItem");
@@ -41,7 +42,8 @@ public class UserFeedItemRepository(RssReaderDbContext context) : IUserFeedItemR
 
     public async Task MarkAsReadAsync(int userId, int feedItemId, bool isRead = true, CancellationToken ct = default)
     {
-        var userFeedItem = await GetAsync(userId, feedItemId, ct);
+        var userFeedItem = await GetAsync(userId, feedItemId, ct)
+            ?? await CreateAsync(userId, feedItemId, ct);
         if (userFeedItem is null)
         {
             throw new KeyNotFoundException($"{userId} doesn't have {feedItemId} feedItem");
@@ -51,8 +53,9 @@ public class UserFeedItemRepository(RssReaderDbContext context) : IUserFeedItemR
 
     public async Task MarkAsRemovedAsync(int userId, int feedItemId, bool isRemoved, CancellationToken ct = default)
     {
-        var userFeedItem = await GetAsync(userId, feedItemId, ct);
-        if(userFeedItem is null)
+        var userFeedItem = await GetAsync(userId, feedItemId, ct)
+            ?? await CreateAsync(userId, feedItemId, ct);
+        if (userFeedItem is null)
         {
             throw new KeyNotFoundException($"{userId} doesn't have {feedItemId} feedItem");
         }

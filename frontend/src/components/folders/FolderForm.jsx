@@ -1,25 +1,25 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addFeed, editFeed } from 'Actions/feedsActions';
+import { addFolder, editFolder } from 'Actions/foldersActions';
 
-export default function FeedForm({ editingFeed, onDone }) {
+export default function FolderForm({ editingFolder, onDone }) {
     const dispatch = useDispatch();
-    const [url, setUrl] = useState(editingFeed?.url || '');
+    const [name, setName] = useState(editingFolder?.name || '');
     const [error, setError] = useState(null);
-    const isEditing = Boolean(editingFeed);
+    const isEditing = Boolean(editingFolder);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
 
         const action = isEditing
-            ? editFeed({ id: editingFeed.id, url })
-            : addFeed({ url });
+            ? editFolder({ id: editingFolder.id, name })
+            : addFolder({ name });
 
         const result = await dispatch(action);
 
         if (result.meta.requestStatus === 'fulfilled') {
-            setUrl('');
+            setName('');
             onDone();
         } else {
             setError(result.payload || 'Something went wrong');
@@ -29,13 +29,12 @@ export default function FeedForm({ editingFeed, onDone }) {
     return (
         <form className="form-row" onSubmit={handleSubmit}>
             <input
-                type="url"
-                placeholder="https://example.com/rss"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Folder name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
             />
-            <button type="submit">{isEditing ? 'Save' : 'Create Feed'}</button>
+            <button type="submit">{isEditing ? 'Save' : 'Create Folder'}</button>
             <button type="button" className="ghost" onClick={onDone}>Cancel</button>
             {error && <p className="error-text">{error}</p>}
         </form>

@@ -98,11 +98,16 @@ public class FeedItemService(
     {
         int userId = currentUserService.UserId;
 
-        return await feedItemRepository
+        var item = await feedItemRepository
             .GetSingleQuery(feedItemId)
             .Select(ToDtoPersonal(userId))
             .FirstOrDefaultAsync(ct)
             ?? throw new KeyNotFoundException($"Feed Item with Id {feedItemId} was not found");
+
+        await userFeedItemRepository.MarkAsReadAsync(userId, feedItemId, isRead: true, ct);
+        await unitOfWork.CommitAsync(ct);
+
+        return item;
     }
 
     public async Task MarkAsReadAsync(int feedItemId, bool isRead = true, CancellationToken ct = default)
@@ -199,4 +204,41 @@ public class FeedItemService(
         IsRead = false,
         IsFavorite = false
     };
+
+    public async Task<FeedItemDto> CreateFeedItemAsync(
+    int feedId,
+    CreateFeedItemDto createFeedItemDto,
+    CancellationToken ct = default)
+    {
+        var feedExists = await feedItemRepository.FeedExistsAsync(feedId, ct);
+        if (!feedExists)
+            throw new KeyNotFoundException($"Feed with Id {feedId} was not found");
+
+        var feedItem = new FeedItem
+        {
+            FeedId = feedId,
+            Title = createFeedItemDto.Title,
+            Description = createFeedItemDto.Description,
+            Link = createFeedItemDto.Link,
+            PublishDate = createFeedItemDto.PublishDate,
+            IconUrl = createFeedItemDto.IconUrl,
+            Attachments = createFeedItemDto.Attachments,
+        };
+
+        await feedItemRepository.AddAsync(feedItem, ct);
+        await unitOfWork.CommitAsync(ct);
+
+        return new FeedItemDto
+        {
+            Id = feedItem.Id,
+            Title = feedItem.Title,
+            Description = feedItem.Description,
+            Link = feedItem.Link,
+            PublishDate = feedItem.PublishDate,
+            IconUrl = feedItem.IconUrl,
+            Attachments = feedItem.Attachments,
+            IsRead = false,
+            IsFavorite = false,
+        };
+    }
 }

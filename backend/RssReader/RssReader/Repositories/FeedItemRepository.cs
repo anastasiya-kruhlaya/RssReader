@@ -75,4 +75,9 @@ public class FeedItemRepository(RssReaderDbContext context) : BaseRepository<Fee
     {
         await context.FeedItems.AddRangeAsync(feedItems, ct);
     }
+
+    public async Task<bool> FeedExistsAsync(int feedId, CancellationToken ct = default)
+    {
+        return await context.Feeds.AnyAsync(f => f.Id == feedId, ct);
+    }
 }

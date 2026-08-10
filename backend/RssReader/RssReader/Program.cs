@@ -13,12 +13,25 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
+Console.WriteLine($"Jwt:Key loaded = {!string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])}");
+Console.WriteLine($"ConnectionString loaded = {!string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection"))}");
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<RssReaderDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -35,6 +48,7 @@ builder.Services.AddScoped<IFeedItemService, FeedItemService>();
 builder.Services.AddScoped<IFeedService, FeedService>();
 builder.Services.AddScoped<IFolderService, FolderService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -74,6 +88,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RssReader.Constants;
 using RssReader.DTOs.FeedItem;
 using RssReader.Services;
+using RssReader.Services.Interfaces;
 using System.Security.Claims;
 
 namespace RssReader.Controllers;
@@ -11,7 +12,7 @@ namespace RssReader.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/feed-items")]
-public class FeedItemController(FeedItemService feedItemService) : ControllerBase
+public class FeedItemController(IFeedItemService feedItemService) : ControllerBase
 {
     [AllowAnonymous]
     [HttpGet("global")]
@@ -49,9 +50,16 @@ public class FeedItemController(FeedItemService feedItemService) : ControllerBas
     [HttpPost("{itemId:int}/read")]
     public async Task<IActionResult> MarkAsRead(int itemId, [FromQuery] bool isRead = true, CancellationToken ct = default)
     {
-        await feedItemService.MarkAsReadAsync(itemId, isRead, ct);
+        try
+        {
+            await feedItemService.MarkAsReadAsync(itemId, isRead, ct);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
     }
 
     [HttpPost("{itemId:int}/favorite")]
@@ -65,8 +73,26 @@ public class FeedItemController(FeedItemService feedItemService) : ControllerBas
     [HttpDelete("{itemId:int}")]
     public async Task<IActionResult> RemoveItem(int itemId, CancellationToken ct)
     {
-        await feedItemService.RemoveFeedItemAsync(itemId, ct);
+        try
+        {
+            await feedItemService.RemoveFeedItemAsync(itemId, ct);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateItem(
+        int feedId,
+        CreateFeedItemDto createFeedItemDto,
+        CancellationToken ct = default)
+    {
+        var result = await feedItemService.CreateFeedItemAsync(feedId, createFeedItemDto, ct);
+
+        return Ok(result);
     }
 }
