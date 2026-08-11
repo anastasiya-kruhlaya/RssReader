@@ -8,7 +8,7 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor)
     {
         get
         {
-            var userIdClaim = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+            Claim? userIdClaim = httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
 
             if (userIdClaim is null || string.IsNullOrEmpty(userIdClaim.Value))
             {

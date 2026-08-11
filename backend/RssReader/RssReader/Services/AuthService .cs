@@ -49,4 +49,9 @@ public class AuthService(
             Email = user.Email
         };
     }
+
+    public Task LogoutAsync(CancellationToken ct = default)
+    {
+        return Task.CompletedTask;
+    }
 }

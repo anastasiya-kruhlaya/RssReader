@@ -33,10 +33,6 @@ public class UserFeedItemRepository(RssReaderDbContext context) : IUserFeedItemR
     {
         var userFeedItem = await GetAsync(userId, feedItemId, ct)
             ?? await CreateAsync(userId, feedItemId, ct);
-        if(userFeedItem is null)
-        {
-            throw new KeyNotFoundException($"{userId} doesn't have {feedItemId} feedItem");
-        }
         userFeedItem.IsFavorite = isFavorite;
     }
 
@@ -44,10 +40,6 @@ public class UserFeedItemRepository(RssReaderDbContext context) : IUserFeedItemR
     {
         var userFeedItem = await GetAsync(userId, feedItemId, ct)
             ?? await CreateAsync(userId, feedItemId, ct);
-        if (userFeedItem is null)
-        {
-            throw new KeyNotFoundException($"{userId} doesn't have {feedItemId} feedItem");
-        }
         userFeedItem.IsRead = isRead;
     }
 
@@ -55,10 +47,6 @@ public class UserFeedItemRepository(RssReaderDbContext context) : IUserFeedItemR
     {
         var userFeedItem = await GetAsync(userId, feedItemId, ct)
             ?? await CreateAsync(userId, feedItemId, ct);
-        if (userFeedItem is null)
-        {
-            throw new KeyNotFoundException($"{userId} doesn't have {feedItemId} feedItem");
-        }
         userFeedItem.IsRemoved = isRemoved;
     }
 }

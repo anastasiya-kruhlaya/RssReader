@@ -50,16 +50,9 @@ public class FeedItemController(IFeedItemService feedItemService) : ControllerBa
     [HttpPost("{itemId:int}/read")]
     public async Task<IActionResult> MarkAsRead(int itemId, [FromQuery] bool isRead = true, CancellationToken ct = default)
     {
-        try
-        {
-            await feedItemService.MarkAsReadAsync(itemId, isRead, ct);
+        await feedItemService.MarkAsReadAsync(itemId, isRead, ct);
 
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
+        return NoContent();
     }
 
     [HttpPost("{itemId:int}/favorite")]
@@ -73,19 +66,12 @@ public class FeedItemController(IFeedItemService feedItemService) : ControllerBa
     [HttpDelete("{itemId:int}")]
     public async Task<IActionResult> RemoveItem(int itemId, CancellationToken ct)
     {
-        try
-        {
-            await feedItemService.RemoveFeedItemAsync(itemId, ct);
+        await feedItemService.RemoveFeedItemAsync(itemId, ct);
 
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { message = ex.Message });
-        }
+        return NoContent();
     }
 
-    [HttpPost]
+    [HttpPost("{itemId:int}/items")]
     public async Task<IActionResult> CreateItem(
         int feedId,
         CreateFeedItemDto createFeedItemDto,

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RssReader.Data;
 using RssReader.Mapping;
+using RssReader.Middleware;
 using RssReader.Repositories;
 using RssReader.Repositories.Interfaces;
 using RssReader.Repositories.UnitOfWork;
@@ -13,8 +14,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
-Console.WriteLine($"Jwt:Key loaded = {!string.IsNullOrEmpty(builder.Configuration["Jwt:Key"])}");
-Console.WriteLine($"ConnectionString loaded = {!string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection"))}");
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -48,7 +49,6 @@ builder.Services.AddScoped<IFeedItemService, FeedItemService>();
 builder.Services.AddScoped<IFeedService, FeedService>();
 builder.Services.AddScoped<IFolderService, FolderService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
 
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -88,6 +88,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseExceptionHandler();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
