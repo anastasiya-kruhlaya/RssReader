@@ -24,6 +24,8 @@ export default function UserMenu() {
         setOpen(false);
     };
 
+    const closeMenu = () => setOpen(false);
+
     return (
         <div className="user-menu" ref={menuRef}>
             <button className="user-menu__trigger" onClick={() => setOpen((o) => !o)}>
@@ -33,19 +35,44 @@ export default function UserMenu() {
             {open && (
                 <ul className="user-menu__dropdown">
                     <li>
-                        <NavLink to="/profile" onClick={() => setOpen(false)}>Profile</NavLink>
+                        <NavLink 
+                            to="/profile" 
+                            onClick={closeMenu}
+                        >
+                            Profile
+                        </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/personal-feeds" onClick={() => setOpen(false)}>My Feeds</NavLink>
+                        <NavLink 
+                            to="/personal-feeds" 
+                            onClick={closeMenu}
+                        >
+                            My Feeds
+                        </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/personal-feeditems" onClick={() => setOpen(false)}>My Feed Items</NavLink>
+                        <NavLink 
+                            to="/personal-feeditems" 
+                            onClick={closeMenu}
+                        >
+                            My Feed Items
+                        </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/folders" onClick={() => setOpen(false)}>My Folders</NavLink>
+                        <NavLink 
+                            to="/folders" 
+                            onClick={closeMenu}
+                        >
+                            My Folders
+                        </NavLink>
                     </li>
                     <li>
-                        <button className="user-menu__logout" onClick={handleLogout}>Logout</button>
+                        <button 
+                            className="user-menu__logout" 
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
                     </li>
                 </ul>
             )}

@@ -1,4 +1,4 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../utils/api'
 import urls from '../utils/urls'
 
@@ -64,12 +64,12 @@ const feedsSlice = createSlice({
         currentFeedId: null,
     },
     reducers: {
-    selectFeed(state, action) {
-        state.currentFeedId = action.payload;
-    },
-    clearFeedsError(state) {
-        state.error = null;
-    },
+        selectFeed(state, action) {
+            state.currentFeedId = action.payload;
+        },
+        clearFeedsError(state) {
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -92,7 +92,7 @@ const feedsSlice = createSlice({
             state.error = action.payload;
         })
         .addCase(editFeed.fulfilled, (state, action) => {
-            const idx = state.list.findIndex((f) => f. id === action.payload.id);
+            const idx = state.list.findIndex((f) => f.id === action.payload.id);
             if (idx !== -1) state.list[idx] = action.payload;
         })
         .addCase(editFeed.rejected, (state, action) => {

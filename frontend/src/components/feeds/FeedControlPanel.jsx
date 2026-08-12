@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addFeed, editFeed, removeFeed } from 'Actions/feedsActions';
+import { useDeleteFeed } from '../../hooks/useDeleteFeed';
 
 export default function FeedControlPanel({ editingFeed, onDone }) {
     const dispatch = useDispatch();
@@ -48,13 +49,4 @@ export default function FeedControlPanel({ editingFeed, onDone }) {
             {error && <p className="control-form__error">{error}</p>}
         </form>
     );
-}
-
-export function useDeleteFeed() {
-    const dispatch = useDispatch();
-    return (id) => {
-        if (window.confirm('Remove this feed?')) {
-            dispatch(removeFeed(id));
-        }
-    };
 }

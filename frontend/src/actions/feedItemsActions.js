@@ -8,4 +8,4 @@ export {
     toggleItemFavorite,
     removeItem,
     clearItemsError,
-} from '../reducers/feedItemsReducer'
+} from 'Reducers/feedItemsReducer'

@@ -5,4 +5,4 @@ export {
     editFolder,
     removeFolder,
     clearFoldersError 
-} from '../reducers/foldersReducer';
+} from 'Reducers/foldersReducer';

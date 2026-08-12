@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getFeeds, removeFeed } from 'Actions/feedsActions';
 import FeedForm from 'Components/feeds/FeedForm';
-import AddToFolderMenu from 'Components/feeds/AddToFolderMenu';
+import AddToFolderButton from 'Components/feeds/AddToFolderButton';
 
 export default function PersonalFeeds() {
     const dispatch = useDispatch();
@@ -49,7 +49,7 @@ export default function PersonalFeeds() {
                             {feed.title || feed.url}
                         </Link>
                         <div className="feed-item__actions">
-                            <AddToFolderMenu feedId={feed.id} />
+                            <AddToFolderButton feedId={feed.id} />
                             <button className="ghost" onClick={() => setEditingFeed(feed)}>Edit</button>
                             <button className="danger" onClick={() => handleDelete(feed.id)}>Delete</button>
                         </div>

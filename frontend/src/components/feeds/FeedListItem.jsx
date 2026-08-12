@@ -1,19 +1,24 @@
 const IMAGE_SIZE = 20;
+
 export default function FeedListItem({ feed, onEdit, onDelete }) {
     const {
         id,
         title,
         categoryName,
-        totalNewsCount
+        totalNewsCount,
+        iconUrl
     } = feed;
+
     return (
         <div className="feed-item">
-            {feed.iconUrl && (
-                <img 
-                    src={feed.iconUrl} 
-                    alt="" 
-                    width={IMAGE_SIZE} 
-                    height={IMAGE_SIZE} />
+            {
+                iconUrl && (
+                    <img 
+                        src={iconUrl} 
+                        alt="" 
+                        width={IMAGE_SIZE} 
+                        height={IMAGE_SIZE} 
+                    />
                 )
             }
             <span className="feed-item__title">{title}</span>

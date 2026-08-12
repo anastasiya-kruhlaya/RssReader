@@ -3,4 +3,4 @@ export {
     register, 
     logout, 
     clearAuthError
-} from '../reducers/authReducer'
+} from 'Reducers/authReducer'

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getFeeds, removeFeed } from 'Actions/feedsActions';
 import FeedForm from 'Components/feeds/FeedForm';
-import { getFolders } from '../reducers/foldersReducer';
-import AddToFolderMenu from '../components/feeds/AddToFolderMenu';
+import { getFolders } from 'Reducers/foldersReducer';
+import AddToFolderButton from 'Components/feeds/AddToFolderButton';
 
 export default function Feeds() {
     const dispatch = useDispatch();
@@ -52,7 +52,7 @@ export default function Feeds() {
                         </Link>
                         <span className="feed-item__count">{feed.totalNewsCount ?? 0} news</span>
                         <div className="feed-item__actions">
-                            <AddToFolderMenu feedId={feed.id} />
+                            <AddToFolderButton feedId={feed.id} />
                             <button className="ghost" onClick={() => setEditingFeed(feed)}>Edit</button>
                             <button className="danger" onClick={() => handleDelete(feed.id)}>Delete</button>
                         </div>

@@ -55,6 +55,8 @@ module.exports = {
         alias: {
             Components: path.resolve(__dirname, "src/components"),
             Actions: path.resolve(__dirname, "src/actions"), 
+            Reducers: path.resolve(__dirname, "src/reducers"),
+            Hooks: path.resolve(__dirname, "src/hooks"),
         }
     },
 };

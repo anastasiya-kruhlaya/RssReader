@@ -35,17 +35,28 @@ export default function AllFeedItems() {
                         <div>
                             <button
                                 className="ghost"
-                                onClick={() => dispatch(markItemRead({ itemId: item.id, isRead: !item.isRead }))}
+                                onClick={() => 
+                                    dispatch(markItemRead({ itemId: item.id, isRead: !item.isRead }))
+                                }
                             >
                                 {item.isRead ? 'Mark unread' : 'Mark read'}
                             </button>
                             <button
                                 className="ghost"
-                                onClick={() => dispatch(toggleItemFavorite({ itemId: item.id, isFavorite: !item.isFavorite }))}
+                                onClick={() => 
+                                    dispatch(toggleItemFavorite({ itemId: item.id, isFavorite: !item.isFavorite }))
+                                }
                             >
                                 {item.isFavorite ? '★ Favorited' : '☆ Favorite'}
                             </button>
-                            <button className="danger" onClick={() => handleDelete(item.id)}>Delete</button>
+                            <button 
+                                className="danger" 
+                                onClick={() => 
+                                    handleDelete(item.id)
+                                }
+                            >
+                                Delete
+                            </button>
                         </div>
                     </div>
                 ))}

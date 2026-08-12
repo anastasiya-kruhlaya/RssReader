@@ -20,22 +20,25 @@ export default function NavBar() {
 
                 <li className="navMenu__spacer" />
 
-                {isAuthenticated ? (
-                    <li>
-                        <UserMenu />
-                    </li>
-                ) : (
-                    <>
-                        <li>
-                            <NavLink to="/login">Login</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/register" className="btn-outline">
-                                Create Account
-                            </NavLink>
-                        </li>
-                    </>
-                )}
+                {
+                    isAuthenticated 
+                        ? (
+                            <li>
+                                <UserMenu />
+                            </li>
+                        ) 
+                        : (
+                            <>
+                                <li>
+                                    <NavLink to="/login">Login</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/register" className="btn-outline">
+                                        Create Account
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
             </ul>
         </div>
     );

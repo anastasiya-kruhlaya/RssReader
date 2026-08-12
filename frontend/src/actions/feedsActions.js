@@ -5,4 +5,4 @@ export {
     removeFeed,
     selectFeed,
     clearFeedsError,
-} from '../reducers/feedsReducer';
+} from 'Reducers/feedsReducer';
