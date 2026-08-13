@@ -70,15 +70,4 @@ public class FeedItemController(IFeedItemService feedItemService) : ControllerBa
 
         return NoContent();
     }
-
-    [HttpPost("{itemId:int}/items")]
-    public async Task<IActionResult> CreateItem(
-        int feedId,
-        CreateFeedItemDto createFeedItemDto,
-        CancellationToken ct = default)
-    {
-        var result = await feedItemService.CreateFeedItemAsync(feedId, createFeedItemDto, ct);
-
-        return Ok(result);
-    }
 }

@@ -30,6 +30,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> Logout(CancellationToken ct)
     {
         await authService.LogoutAsync(ct);
+
         return Ok(new { message = "Logged out successefully"});
     }
 }
