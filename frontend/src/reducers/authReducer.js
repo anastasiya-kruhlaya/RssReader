@@ -38,6 +38,42 @@ export const register = createAsyncThunk(
     }
 );
 
+export const changePassword = createAsyncThunk(
+    'auth/changePassword',
+    async ({ currentPassword, newPassword }, { rejectWithValue }) => {
+        try {
+            await api.put(urls.CHANGE_PASSWORD_URL, { currentPassword, newPassword });
+            return true;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
+export const getProfile = createAsyncThunk(
+    'auth/getProfile',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get(urls.GET_PROFILE_URL);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
+export const updateProfile = createAsyncThunk(
+    'auth/updateProfile',
+    async ({ userName, email }, { rejectWithValue }) => {
+        try {
+            const response = await api.put(urls.UPDATE_PROFILE_URL, { userName, email });
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -86,6 +122,18 @@ const authSlice = createSlice({
             })
             .addCase(register.rejected, (state, action) => {
                 state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+            .addCase(getProfile.fulfilled, (state, action) => {
+                state.user = action.payload;
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                state.user = action.payload;
+            })
+            .addCase(updateProfile.rejected, (state, action) => {
                 state.error = action.payload;
             });
     },

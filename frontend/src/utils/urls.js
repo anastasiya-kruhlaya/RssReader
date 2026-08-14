@@ -3,8 +3,13 @@ const ADD_FEED_URL = '/feeds';
 const EDIT_FEED_URL = (id) => `/feeds/${id}`;
 const REMOVE_FEED_URL = (id) => `/feeds/${id}`;
 
+const GET_PROFILE_URL = '/user/me';
+const UPDATE_PROFILE_URL = '/user/me';
+const DELETE_ACCOUNT_URL = '/user/me';
+
 const LOGIN_URL = '/auth/login';
 const REGISTER_URL = '/auth/register';
+const CHANGE_PASSWORD_URL = '/auth/change-password';
 
 const GET_GLOBAL_ITEMS_URL = '/feed-items/global';
 const GET_PERSONAL_ITEMS_URL = '/feed-items/personal';
@@ -31,8 +36,13 @@ export default {
     EDIT_FEED_URL,
     REMOVE_FEED_URL,
 
+    GET_PROFILE_URL,
+    DELETE_ACCOUNT_URL,
+    UPDATE_PROFILE_URL,
+
     LOGIN_URL,
     REGISTER_URL,
+    CHANGE_PASSWORD_URL,
 
     GET_GLOBAL_ITEMS_URL, 
     GET_PERSONAL_ITEMS_URL, 

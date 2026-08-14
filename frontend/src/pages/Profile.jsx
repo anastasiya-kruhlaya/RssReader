@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFeeds } from 'Actions/feedsActions';
 import { getPersonalItems  } from 'Actions/feedItemsActions';
 import { getFolders } from 'Actions/foldersActions';
+import { updateProfile } from 'Actions/authActions';
 import { Link } from 'react-router-dom';
+import ChangePasswordForm from 'Components/auth/ChangePasswordForm';
 
 export default function Profile() {
     const dispatch = useDispatch();
@@ -12,16 +14,74 @@ export default function Profile() {
     const items = useSelector((state) => state.feedItems.list);
     const folders = useSelector((state) => state.folders.list);
 
+    const [userName, setUserName] = useState(user?.userName || '');
+    const [email, setEmail] = useState(user?.email || '');
+    const [status, setStatus] = useState(null);
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         dispatch(getFeeds());
         dispatch(getPersonalItems());
         dispatch(getFolders());
     }, [dispatch]);
 
+    useEffect(() => {
+        setUserName(user?.userName || '');
+        setEmail(user?.email || '');
+    }, [user]);
+
+    const handleSaveProfile = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setStatus('saving');
+
+        const result = await dispatch(updateProfile({ userName, email }));
+
+        if (updateProfile.fulfilled.match(result)) {
+            setStatus('saved');
+        } else {
+            setStatus(null);
+            setError(result.payload || 'Something went wrong');
+        }
+    };
+
+
     return (
         <div className="page">
             <h1>{user?.userName || 'Profile'}</h1>
             <p>{user?.email}</p>
+            <section className="section">
+                <div className="section-header">
+                    <h2>Edit Profile</h2>
+                </div>
+                <form className="form-row" onSubmit={handleSaveProfile} style={{ flexDirection: 'column' }}>
+                    <input
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder="Username"
+                        required
+                    />
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        required
+                    />
+                    <button type="submit" disabled={status === 'saving'}>
+                        {status === 'saving' ? 'Saving...' : 'Save'}
+                    </button>
+                    {status === 'saved' && <p className="empty-text">Saved.</p>}
+                    {error && <p className="error-text">{error}</p>}
+                </form>
+            </section>
+
+            <section className="section">
+                <div className="section-header">
+                    <h2>Change Password</h2>
+                </div>
+                <ChangePasswordForm />
+            </section>
             <section className="section">
                 <div className="section-header">
                     <h2>Quick Actions</h2>

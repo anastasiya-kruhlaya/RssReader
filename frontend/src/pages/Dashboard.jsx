@@ -10,13 +10,13 @@ import FeedControlPanel from 'Components/feeds/FeedControlPanel';
 import { useDeleteFeed } from 'Hooks/useDeleteFeed';
 
 export default function Dashboard() {
-    const isEditing = !!editingFeed;
-    const firstFiveItems = items.slice(0, 5);
     const dispatch = useDispatch();
     const { list: feeds, loading: feedsLoading, error: feedsError } = useSelector((state) => state.feeds);
     const { list: items, loading: itemsLoading } = useSelector((state) => state.feedItems);
-
+    const firstFiveItems = items.slice(0, 5);
+    
     const [editingFeed, setEditingFeed] = useState(null); 
+    const isEditing = !!editingFeed;
     const deleteFeed = useDeleteFeed();
 
     useEffect(() => {
