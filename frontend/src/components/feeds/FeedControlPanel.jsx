@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addFeed, editFeed, removeFeed } from 'Actions/feedsActions';
-import { useDeleteFeed } from '../../hooks/useDeleteFeed';
+import { useDeleteFeed } from 'Hooks/useDeleteFeed';
 
 export default function FeedControlPanel({ editingFeed, onDone }) {
     const dispatch = useDispatch();

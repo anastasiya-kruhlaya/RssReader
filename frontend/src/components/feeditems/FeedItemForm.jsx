@@ -15,9 +15,16 @@ const INITIAL = {
 export default function FeedItemForm({ feedId, onDone }) {
     const dispatch = useDispatch();
     const { 
-        values, 
+        values: {
+            title,
+            description,
+            link,
+            publishDate,
+            iconUrl,
+        }, 
         handleChange, 
-        reset, setValues
+        reset, 
+        setValues
     } = useForm(INITIAL);
     const [error, setError] = useState(null);
 
@@ -29,7 +36,9 @@ export default function FeedItemForm({ feedId, onDone }) {
             title: values.title,
             description: values.description || null,
             link: values.link,
-            publishDate: values.publishDate ? new Date(publishDate).toISOString() : new Date().toISOString(),
+            publishDate: values.publishDate 
+                ? new Date(publishDate).toISOString() 
+                : new Date().toISOString(),
             iconUrl: values.iconUrl || null,
         };
 
@@ -44,7 +53,10 @@ export default function FeedItemForm({ feedId, onDone }) {
     };
 
     return (
-        <form className="form-row" onSubmit={handleSubmit}>
+        <form 
+            className="form-row" 
+            onSubmit={handleSubmit}
+        >
             <input
                 name="title"
                 placeholder="Title"
@@ -82,7 +94,12 @@ export default function FeedItemForm({ feedId, onDone }) {
 
             <div className="form-row">
                 <button type="submit">Add Item</button>
-                <button type="button" className="ghost" onClick={onDone}>Cancel</button>
+                <button 
+                    type="button" 
+                    className="ghost" onClick={onDone}
+                >
+                    Cancel
+                </button>
             </div>
             {error && <p className="error-text">{error}</p>}
         </form>

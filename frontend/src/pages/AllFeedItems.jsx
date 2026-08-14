@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGlobalItems, removeItem, toggleItemFavorite, markItemRead } from 'Actions/feedItemsActions';
 
@@ -10,11 +10,21 @@ export default function AllFeedItems() {
         dispatch(getGlobalItems());
     }, [dispatch]);
 
-    const handleDelete = (id) => {
+    const createMarkReadHandler = useCallback((item) => () => {
+        dispatch(markItemRead({ itemId: item.id, isRead: !item.isRead }));
+    }, [dispatch]);
+
+    const createFavoriteHandler = useCallback((item) => () => {
+        dispatch(toggleItemFavorite({ itemId: item.id, isFavorite: !item.isFavorite }));
+    }, [dispatch]);
+
+    const createDeleteHandler = useCallback((item) => () => {
         if (window.confirm('Remove this item?')) {
-            dispatch(removeItem(id));
+            dispatch(removeItem(item.id));
         }
-    };
+    }, [dispatch]);
+
+
 
     if (loading) return <p className="empty-text">Loading items...</p>;
     if (error) return <p className="error-text">{error}</p>;
@@ -35,25 +45,19 @@ export default function AllFeedItems() {
                         <div>
                             <button
                                 className="ghost"
-                                onClick={() => 
-                                    dispatch(markItemRead({ itemId: item.id, isRead: !item.isRead }))
-                                }
+                                onClick={createMarkReadHandler(item)}
                             >
                                 {item.isRead ? 'Mark unread' : 'Mark read'}
                             </button>
                             <button
                                 className="ghost"
-                                onClick={() => 
-                                    dispatch(toggleItemFavorite({ itemId: item.id, isFavorite: !item.isFavorite }))
-                                }
+                                onClick={createFavoriteHandler(item)}
                             >
                                 {item.isFavorite ? '★ Favorited' : '☆ Favorite'}
                             </button>
                             <button 
                                 className="danger" 
-                                onClick={() => 
-                                    handleDelete(item.id)
-                                }
+                                onClick={createDeleteHandler(item)}
                             >
                                 Delete
                             </button>

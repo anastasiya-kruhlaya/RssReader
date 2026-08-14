@@ -28,53 +28,59 @@ export default function UserMenu() {
 
     return (
         <div className="user-menu" ref={menuRef}>
-            <button className="user-menu__trigger" onClick={() => setOpen((o) => !o)}>
+            <button 
+                className="user-menu__trigger" 
+                onClick={
+                    () => setOpen((o) => !o)
+                }
+            >
                 {user?.userName || user?.email || 'Account'} ▾
             </button>
 
-            {open && (
-                <ul className="user-menu__dropdown">
-                    <li>
-                        <NavLink 
-                            to="/profile" 
-                            onClick={closeMenu}
-                        >
-                            Profile
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink 
-                            to="/personal-feeds" 
-                            onClick={closeMenu}
-                        >
-                            My Feeds
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink 
-                            to="/personal-feeditems" 
-                            onClick={closeMenu}
-                        >
-                            My Feed Items
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink 
-                            to="/folders" 
-                            onClick={closeMenu}
-                        >
-                            My Folders
-                        </NavLink>
-                    </li>
-                    <li>
-                        <button 
-                            className="user-menu__logout" 
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </button>
-                    </li>
-                </ul>
+            {
+                open && (
+                    <ul className="user-menu__dropdown">
+                        <li>
+                            <NavLink 
+                                to="/profile" 
+                                onClick={closeMenu}
+                            >
+                                Profile
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink 
+                                to="/personal-feeds" 
+                                onClick={closeMenu}
+                            >
+                                My Feeds
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink 
+                                to="/personal-feeditems" 
+                                onClick={closeMenu}
+                            >
+                                My Feed Items
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink 
+                                to="/folders" 
+                                onClick={closeMenu}
+                            >
+                                My Folders
+                            </NavLink>
+                        </li>
+                        <li>
+                            <button 
+                                className="user-menu__logout" 
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </button>
+                        </li>
+                    </ul>
             )}
         </div>
     );

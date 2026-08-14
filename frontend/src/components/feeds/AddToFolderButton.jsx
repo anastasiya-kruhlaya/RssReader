@@ -17,8 +17,9 @@ export default function AddToFolderButton({ feedId }) {
     return (
         <div className="add-to-folder">
             <button 
-            className="ghost" 
-            onClick={toggleOpen}>
+                className="ghost" 
+                onClick={toggleOpen}
+            >
                 + Folder
             </button>
             {open && (

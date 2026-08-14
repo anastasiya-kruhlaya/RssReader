@@ -57,6 +57,7 @@ module.exports = {
             Actions: path.resolve(__dirname, "src/actions"), 
             Reducers: path.resolve(__dirname, "src/reducers"),
             Hooks: path.resolve(__dirname, "src/hooks"),
+            Store: path.resolve(__dirname, "src/store"),
         }
     },
 };
