@@ -1,14 +1,22 @@
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getGlobalItems, removeItem, toggleItemFavorite, markItemRead } from 'Actions/feedItemsActions';
+import { getPersonalItems, removeItem, toggleItemFavorite, markItemRead } from 'Actions/feedItemsActions';
+import FeedItemFilters from 'Components/feeditems/FeedItemFilters';
 
 export default function AllFeedItems() {
     const dispatch = useDispatch();
     const { list: items, loading, error } = useSelector((state) => state.feedItems);
 
+    const [filters, setFilters] = useState({
+        isRead: undefined,
+        isFavorite: undefined,
+        from: undefined,
+        to: undefined,
+    });
+
     useEffect(() => {
-        dispatch(getGlobalItems());
-    }, [dispatch]);
+        dispatch(getPersonalItems(filters));
+    }, [dispatch, filters]);
 
     const createMarkReadHandler = useCallback((item) => () => {
         dispatch(markItemRead({ itemId: item.id, isRead: !item.isRead }));
@@ -35,7 +43,7 @@ export default function AllFeedItems() {
                 <div className="section-header">
                     <h2>Feed Items</h2>
                 </div>
-
+                <FeedItemFilters filters={filters} onChange={setFilters} />
                 {items.length === 0 && <p className="empty-text">No items yet.</p>}
 
                 {items.map((item) => (

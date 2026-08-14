@@ -29,6 +29,7 @@ const EDIT_FOLDER_URL = (id) => `/folders/${id}`;
 const REMOVE_FOLDER_URL = (id) => `/folders/${id}`;
 const ADD_FEED_TO_FOLDER_URL = (folderId, feedId) => `/folders/${folderId}/feeds/${feedId}`;
 const REMOVE_FEED_FROM_FOLDER_URL = (folderId, feedId) => `/folders/${folderId}/feeds/${feedId}`;
+const GET_FEEDS_IN_FOLDER_URL = (folderId) => `/folders/${folderId}/feeds`;
 
 export default {
     GET_FEEDS_URL,
@@ -62,4 +63,5 @@ export default {
     REMOVE_FOLDER_URL,
     ADD_FEED_TO_FOLDER_URL,
     REMOVE_FEED_FROM_FOLDER_URL,
+    GET_FEEDS_IN_FOLDER_URL,
 };

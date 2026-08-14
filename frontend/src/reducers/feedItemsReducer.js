@@ -4,9 +4,9 @@ import urls from '../utils/urls';
 
 export const getGlobalItems = createAsyncThunk(
     'feedItems/getGlobalItems',
-    async (filter = {}, { rejectWithValue }) => {
+    async (filters = {}, { rejectWithValue }) => {
         try {
-            const response = await api.get(urls.GET_GLOBAL_ITEMS_URL, { params: filter });
+            const response = await api.get(urls.GET_GLOBAL_ITEMS_URL, { params: filters });
             return response.data;
         } catch (err) {
             return rejectWithValue(err.response?.data?.message || err.message);
@@ -16,9 +16,9 @@ export const getGlobalItems = createAsyncThunk(
 
 export const getPersonalItems = createAsyncThunk(
     'feedItems/getPersonalItems',
-    async (filter = {}, { rejectWithValue }) => {
+    async (filters = {}, { rejectWithValue }) => {
         try {
-            const response = await api.get(urls.GET_PERSONAL_ITEMS_URL, { params: filter });
+            const response = await api.get(urls.GET_PERSONAL_ITEMS_URL, { params: filters });
             return response.data;
         } catch (err) {
             return rejectWithValue(err.response?.data?.message || err.message);
@@ -28,9 +28,9 @@ export const getPersonalItems = createAsyncThunk(
 
 export const getPersonalItemsFiltered = createAsyncThunk(
     'feedItems/getPersonalItemsFiltered',
-    async (filter = {}, { rejectWithValue }) => {
+    async (filters = {}, { rejectWithValue }) => {
         try {
-            const response = await api.get(urls.GET_PERSONAL_ITEMS_FILTERED_URL, { params: filter });
+            const response = await api.get(urls.GET_PERSONAL_ITEMS_FILTERED_URL, { params: filters });
             return response.data;
         } catch (err) {
             return rejectWithValue(err.response?.data?.message || err.message);
@@ -99,6 +99,33 @@ export const addItemToFeed = createAsyncThunk(
         }
     }
 );
+
+export const getItemsByFeedGrouped = createAsyncThunk(
+    'feedItems/getItemsByFeedGrouped',
+    async ({ feedId, pageNumber = 1, pageSize = 50 }, { rejectWithValue }) => {
+        try {
+            const response = await api.get(urls.GET_ITEMS_BY_FEED_GROUPED_URL(feedId), {
+                params: { pageNumber, pageSize },
+            });
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
+export const getItem = createAsyncThunk(
+    'feedItems/getItem',
+    async(itemId, {rejectWithValue}) => {
+        try {
+            const response = await api.get(urls.GET_ITEM_URL(itemId));
+            return response.data;
+        }
+        catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+)
 
 const feedItemsSlice = createSlice({
     name: 'feedItems',
@@ -171,6 +198,22 @@ const feedItemsSlice = createSlice({
                 state.list.push(action.payload);
             })
             .addCase(addItemToFeed.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+            .addCase(getItemsByFeedGrouped.fulfilled, (state, action) => {
+                state.loading = false;
+                state.grouped = action.payload;
+            })
+            .addCase(getItem.fulfilled, (state, action) => {
+                state.loading = false;
+                state.currentItem = action.payload;
+            })
+            .addCase(getItem.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getItem.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.payload;
             });
     },

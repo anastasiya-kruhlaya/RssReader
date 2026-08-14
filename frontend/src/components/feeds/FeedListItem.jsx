@@ -4,10 +4,12 @@ export default function FeedListItem({ feed, onEdit, onDelete }) {
     const {
         id,
         title,
-        categoryName,
-        totalNewsCount,
+        folderNames,
+        feedItemCount,
         iconUrl
     } = feed;
+
+    const folders = folderNames?.join(', ') || 'No folder';
 
     return (
         <div className="feed-item">
@@ -22,8 +24,8 @@ export default function FeedListItem({ feed, onEdit, onDelete }) {
                 )
             }
             <span className="feed-item__title">{title}</span>
-            <span className="feed-item__category">{categoryName}</span>
-            <span className="feed-item__count">{totalNewsCount} news</span>
+            <span className="feed-item__category">{folders}</span>
+            <span className="feed-item__count">{feedItemCount} news</span>
             <button onClick={() => onEdit(feed)}>Edit</button>
             <button onClick={() => onDelete(id)}>Delete</button>
         </div>

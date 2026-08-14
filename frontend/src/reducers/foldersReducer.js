@@ -74,10 +74,24 @@ export const removeFeedFromFolder = createAsyncThunk(
     }
 );
 
+export const getFeedsInFolder = createAsyncThunk(
+    'folders/getFeedsInFolder',
+    async (folderId, { rejectWithValue }) => {
+        try {
+            const response = await api.get(urls.GET_FEEDS_IN_FOLDER_URL(folderId));
+
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response?.data?.message || err.message);
+        }
+    }
+);
+
 const foldersSlice = createSlice({
     name: 'folders',
     initialState: {
         list: [],
+        folderFeeds: [],
         loading: false,
         error: null,
     },
@@ -116,6 +130,15 @@ const foldersSlice = createSlice({
                 if (folder?.feedIds) {
                     folder.feedIds = folder.feedIds.filter((id) => id !== action.payload.feedId);
                 }
+            })
+            .addCase(getFeedsInFolder.pending, (state) => { 
+                state.loading = true; state.error = null; 
+            })
+            .addCase(getFeedsInFolder.fulfilled, (state, action) => { 
+                state.loading = false; state.folderFeeds = action.payload; 
+            })
+            .addCase(getFeedsInFolder.rejected, (state, action) => { 
+                state.loading = false; state.error = action.payload;
             })
     },
 });

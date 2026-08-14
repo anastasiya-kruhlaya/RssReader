@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import FeedForm from 'Components/feeds/FeedForm.jsx';
 import Loader from 'Components/ui/Loader.jsx';
 import { getGlobalItems, removeItem } from 'Actions/feedItemsActions';
-import FeedControlPanel from 'Components/feeds/FeedControlPanel';
 import { useDeleteFeed } from 'Hooks/useDeleteFeed';
+
 
 export default function Dashboard() {
     const dispatch = useDispatch();
@@ -38,6 +38,11 @@ export default function Dashboard() {
         if (window.confirm('Remove this feed?')) dispatch(removeFeed(id));
     };
 
+    const handleDeleteItem = (id) => {
+        if (window.confirm('Remove this item?')) {
+            dispatch(removeItem(id));
+        }
+    };
 
     return (
         <div className="dashboard">
@@ -58,7 +63,7 @@ export default function Dashboard() {
                 {
                     (isEditing) 
                     && (
-                        <FeedControlPanel
+                        <FeedForm
                             editingFeed={editingFeed === 'new' ? null : editingFeed}
                             onDone={() => 
                                 setEditingFeed(null)}
@@ -85,7 +90,7 @@ export default function Dashboard() {
                             key={feed.id}
                             feed={feed}
                             onEdit={setEditingFeed}
-                            onDelete={deleteFeed}
+                            onDelete={handleDelete}
                         />
                 ))}
             </section>

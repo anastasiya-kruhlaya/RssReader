@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addFeed, editFeed } from 'Actions/feedsActions';
+import { getFeeds } from '../../reducers/feedsReducer';
 
 export default function FeedForm({ editingFeed, onDone }) {
     const dispatch = useDispatch();
     const [url, setUrl] = useState(editingFeed?.url || '');
+    const [title, setTitle] = useState(editingFeed?.title || '');
+    const [iconUrl, setIconUrl] = useState(editingFeed?.iconUrl || '');
     const [error, setError] = useState(null);
     const isEditing = Boolean(editingFeed);
 
@@ -12,14 +15,24 @@ export default function FeedForm({ editingFeed, onDone }) {
         e.preventDefault();
         setError(null);
 
+        const feedData = {
+            url,
+            title: title.trim(),
+            iconUrl: iconUrl.trim() || undefined,
+            ...(isEditing && { id: editingFeed.id }),
+        };
+
         const action = isEditing
-            ? editFeed({ id: editingFeed.id, url })
-            : addFeed({ url });
+            ? editFeed(feedData)
+            : addFeed(feedData);
 
         const result = await dispatch(action);
 
         if (result.meta.requestStatus === 'fulfilled') {
             setUrl('');
+            setTitle('');
+            setIconUrl('');
+            dispatch(getFeeds());
             onDone();
         } else {
             setError(result.payload || 'Something went wrong');
@@ -34,6 +47,18 @@ export default function FeedForm({ editingFeed, onDone }) {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 required
+            />
+            <input
+                type="text"
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+            />
+            <input
+                type="url"
+                placeholder="Icon URL (optional)"
+                value={iconUrl}
+                onChange={(e) => setIconUrl(e.target.value)}
             />
             <button type="submit">{isEditing ? 'Save' : 'Create Feed'}</button>
             <button type="button" className="ghost" onClick={onDone}>Cancel</button>

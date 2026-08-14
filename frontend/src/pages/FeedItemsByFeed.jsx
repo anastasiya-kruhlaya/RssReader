@@ -1,23 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getItemsByFeed, removeItem, markItemRead, toggleItemFavorite } from 'Actions/feedItemsActions';
+import { getItemsByFeedGrouped, removeItem, markItemRead, toggleItemFavorite } from 'Actions/feedItemsActions';
 import FeedItemForm from 'Components/feeditems/FeedItemForm';
+import FeedItemCard from 'Components/feeditems/FeedItemCard';
 
 export default function FeedItemsByFeed() {
     const { feedId } = useParams();
     const dispatch = useDispatch();
-    const { list: items, loading, error } = useSelector((state) => state.feedItems);
     const [showForm, setShowForm] = useState(false);
+    const { grouped, loading, error } = useSelector((state) => state.feedItems);
 
     useEffect(() => {
-        dispatch(getItemsByFeed({ feedId: Number(feedId) }));
+        dispatch(getItemsByFeedGrouped({ feedId: Number(feedId) }));
     }, [dispatch, feedId]);
 
-    const handleDelete = (id) => {
-        if (window.confirm('Remove this item?')) {
-            dispatch(removeItem(id));
-        }
+    const sections = [
+        ['Today', grouped?.today],
+        ['Yesterday', grouped?.yesterday],
+        ['Last 7 Days', grouped?.lastWeek],
+        ['Older', grouped?.older],
+    ];
+
+    const handleFormDone = () => {
+        setShowForm(false);
+        dispatch(getItemsByFeedGrouped({ feedId: Number(feedId) }));
     };
 
     return (
@@ -25,40 +32,29 @@ export default function FeedItemsByFeed() {
             <section className="section">
                 <div className="section-header">
                     <h2>Feed Items</h2>
-                    {!showForm && <button onClick={() => setShowForm(true)}>+ Add Item</button>}
+                    <button onClick={() => setShowForm(true)}>Add Item</button>
                 </div>
-
                 {showForm && (
-                    <FeedItemForm feedId={feedId} onDone={() => setShowForm(false)} />
+                    <FeedItemForm 
+                        feedId={feedId} 
+                        onDone={handleFormDone}
+                    />
                 )}
-
-                {loading && <p className="empty-text">Loading items...</p>}
+                {loading && <p className="empty-text">Loading...</p>}
                 {error && <p className="error-text">{error}</p>}
-                {!loading && items.length === 0 && (
-                    <p className="empty-text">No items in this feed yet.</p>
-                )}
-
-                {items.map((item) => (
-                    <div className="item-card" key={item.id}>
-                        <h3>{item.title}</h3>
-                        <p>{item.description}</p>
-                        <div>
-                            <button
-                                className="ghost"
-                                onClick={() => dispatch(markItemRead({ itemId: item.id, isRead: !item.isRead }))}
-                            >
-                                {item.isRead ? 'Mark unread' : 'Mark read'}
-                            </button>
-                            <button
-                                className="ghost"
-                                onClick={() => dispatch(toggleItemFavorite({ itemId: item.id, isFavorite: !item.isFavorite }))}
-                            >
-                                {item.isFavorite ? '★ Favorited' : '☆ Favorite'}
-                            </button>
-                            <button className="danger" onClick={() => handleDelete(item.id)}>Delete</button>
+                {sections.map(([label, list]) =>
+                    list && list.length > 0 && (
+                        <div key={label}>
+                            <div className="group-heading">{label}</div>
+                            {list.map((item) => 
+                                <FeedItemCard 
+                                    key={item.id} 
+                                    item={item} />
+                                )
+                            }
                         </div>
-                    </div>
-                ))}
+                    )
+                )}
             </section>
         </div>
     );

@@ -26,6 +26,7 @@ export default function FeedItemForm({ feedId, onDone }) {
         reset, 
         setValues
     } = useForm(INITIAL);
+
     const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
@@ -33,13 +34,13 @@ export default function FeedItemForm({ feedId, onDone }) {
         setError(null);
 
         const item = {
-            title: values.title,
-            description: values.description || null,
-            link: values.link,
-            publishDate: values.publishDate 
+            Title: title,
+            Description: description || null,
+            Link: link,
+            PublishDate: publishDate 
                 ? new Date(publishDate).toISOString() 
                 : new Date().toISOString(),
-            iconUrl: values.iconUrl || null,
+            IconUrl: iconUrl || null,
         };
 
         const result = await dispatch(addItemToFeed({ feedId, item }));
@@ -61,35 +62,35 @@ export default function FeedItemForm({ feedId, onDone }) {
                 name="title"
                 placeholder="Title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={handleChange}
                 required
             />
             <input
                 name="description"
                 placeholder="Description (optional)"
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={handleChange}
             />
             <input
                 name="link"
                 type="url"
                 placeholder="Link"
                 value={link}
-                onChange={(e) => setLink(e.target.value)}
+                onChange={handleChange}
                 required
             />
             <input
                 name="publishDate"
                 type="datetime-local"
                 value={publishDate}
-                onChange={(e) => setPublishDate(e.target.value)}
+                onChange={handleChange}
             />
             <input
                 name="iconUrl"
                 type="url"
                 placeholder="Icon URL (optional)"
                 value={iconUrl}
-                onChange={(e) => setIconUrl(e.target.value)}
+                onChange={handleChange}
             />
 
             <div className="form-row">

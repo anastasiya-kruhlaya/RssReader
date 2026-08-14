@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFolders, removeFolder } from 'Actions/foldersActions';
 import FolderForm from 'Components/folders/FolderForm';
+import { Link } from 'react-router-dom';
 
 export default function Folders() {
     const dispatch = useDispatch();
@@ -43,7 +44,7 @@ export default function Folders() {
 
                 {folders.map((folder) => (
                     <div className="feed-item" key={folder.id}>
-                        <span className="feed-item__title">{folder.name}</span>
+                        <Link to={`/folders/${folder.id}`} className="feed-item__title">{folder.name}</Link>
                         <span className="feed-item__count">{folder.feedCount ?? 0} feeds</span>
                         <div className="feed-item__actions">
                             <button className="ghost" onClick={() => setEditingFolder(folder)}>Rename</button>
