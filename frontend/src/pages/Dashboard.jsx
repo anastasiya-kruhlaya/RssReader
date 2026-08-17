@@ -9,6 +9,7 @@ import { getGlobalItems, removeItem } from 'Actions/feedItemsActions';
 import { useDeleteFeed } from 'Hooks/useDeleteFeed';
 
 
+
 export default function Dashboard() {
     const dispatch = useDispatch();
     const { list: feeds, loading: feedsLoading, error: feedsError } = useSelector((state) => state.feeds);
@@ -99,7 +100,7 @@ export default function Dashboard() {
                 <div className="dashboard__section-header">
                     <h2 className="dashboard__title">Recent Feed Items</h2>
                     <Link 
-                        to="/feeditems" 
+                        to="/feed-items" 
                         className="dashboard__view-all"
                     >
                         View all 

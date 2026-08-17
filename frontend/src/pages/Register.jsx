@@ -20,34 +20,36 @@ export default function Register() {
     };
 
     return (
-        <div className="page">
-            <h1>Create Account</h1>
-            <form onSubmit={handleSubmit} className="form-row" style={{ flexDirection: 'column' }}>
-                <input
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    placeholder="Username"
-                    required
-                />
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    required
-                />
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    required
-                />
-                <button type="submit" disabled={status === 'loading'}>
-                    {status === 'loading' ? 'Creating...' : 'Create Account'}
-                </button>
-                {error && <p className="error-text">{error}</p>}
-            </form>
+        <div className="auth-page">
+            <div className="page">
+                <h1>Create Account</h1>
+                <form onSubmit={handleSubmit} className="form-row" style={{ flexDirection: 'column' }}>
+                    <input
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder="Username"
+                        required
+                    />
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email"
+                        required
+                    />
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        required
+                    />
+                    <button type="submit" disabled={status === 'loading'}>
+                        {status === 'loading' ? 'Creating...' : 'Create Account'}
+                    </button>
+                    {error && <p className="error-text">{error}</p>}
+                </form>
+            </div>
         </div>
     );
 }

@@ -220,6 +220,7 @@ public class FeedItemService(
             throw new KeyNotFoundException($"Feed with Id {feedId} was not found");
 
         var feedItem = mapper.Map<FeedItem>(createFeedItemDto);
+        feedItem.FeedId = feedId;
 
         await feedItemRepository.AddAsync(feedItem, ct);
         await unitOfWork.CommitAsync(ct);

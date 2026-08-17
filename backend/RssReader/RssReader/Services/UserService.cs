@@ -10,11 +10,6 @@ public class UserService(
     IUnitOfWork unitOfWork,
     CurrentUserService currentUserService) : IUserService
 {
-    public Task ChangePasswordAsync(ChangePasswordDto changePasswordDto, CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task DeleteAccountAsync(CancellationToken ct = default)
     {
         var user = await userRepository.GetByIdAsync(currentUserService.UserId, ct)
@@ -34,6 +29,25 @@ public class UserService(
             UserId = user.Id,
             UserName = user.UserName,
             Email = user.Email,
+        };
+    }
+
+    public async Task<UserProfileDto> UpdateProfileAsync(int userId, UpdateProfileDto dto, CancellationToken ct = default)
+    {
+        var user = await userRepository.GetByIdAsync(userId, ct)
+            ?? throw new KeyNotFoundException("User not found");
+
+        user.UserName = dto.UserName;
+        user.Email = dto.Email;
+
+        await userRepository.UpdateAsync(user, ct);
+        await unitOfWork.CommitAsync(ct);
+
+        return new UserProfileDto
+        {
+            UserId = user.Id,
+            UserName = user.UserName,
+            Email = user.Email
         };
     }
 }

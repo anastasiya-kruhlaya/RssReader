@@ -37,6 +37,8 @@ public class FeedService(
                 feed = new Feed
                 {
                     Url = createFeedDto.Url,
+                    Title = createFeedDto.Title,
+                    IconUrl = createFeedDto.IconUrl,
                     IsActive = true,
                     LastUpdated = DateTime.UtcNow,
                 };
@@ -85,26 +87,37 @@ public class FeedService(
         }
     }
 
-    public async Task UpdateFeedAsync(int feedId, UpdateFeedDto updateFeedDto, CancellationToken ct = default)
+    public async Task<ResponseFeedDto> UpdateFeedAsync(int feedId, UpdateFeedDto updateFeedDto, CancellationToken ct = default)
     {
         var feed = await feedRepository.GetByIdAsync(feedId, ct)
             ?? throw new KeyNotFoundException($"Feed with id {feedId} was not found");
-        
-        if (feed.Url == updateFeedDto.Url) 
-            return;
 
-        var isValid = await ValidateFeedAsync(updateFeedDto.Url);
-        if(isValid)
+        if (updateFeedDto.Title != null)
+            feed.Title = updateFeedDto.Title;
+
+        if (updateFeedDto.IconUrl != null)
+            feed.IconUrl = updateFeedDto.IconUrl;
+
+        if (feed.Url != updateFeedDto.Url)
         {
+            var isValid = await ValidateFeedAsync(updateFeedDto.Url);
+            if (!isValid)
+                throw new Exception($"Url {updateFeedDto.Url} is not valid");
             feed.Url = updateFeedDto.Url;
-            feed.LastUpdated = DateTime.UtcNow;
-            await feedRepository.UpdateAsync(feed, ct);
-            await unitOfWork.CommitAsync(ct);
         }
-        else
+
+        feed.LastUpdated = DateTime.UtcNow;
+
+        await feedRepository.UpdateAsync(feed, ct);
+        await unitOfWork.CommitAsync(ct);
+
+        return new ResponseFeedDto
         {
-            throw new Exception($"Url {updateFeedDto.Url} is not valid");
-        }
+            Id = feed.Id,
+            Url = feed.Url,
+            Title = feed.Title,
+            IconUrl = feed.IconUrl
+        };
     }
 
     private Task<bool> ValidateFeedAsync(string url) => Task.FromResult(true);

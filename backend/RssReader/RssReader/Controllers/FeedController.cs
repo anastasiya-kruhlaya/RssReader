@@ -40,9 +40,9 @@ public class FeedController(IFeedService feedService) : ControllerBase
     [HttpPut("{feedId:int}")]
     public async Task<IActionResult> UpdateFeedAsync(int feedId, UpdateFeedDto updateFeedDto, CancellationToken ct)
     {
-        await feedService.UpdateFeedAsync(feedId, updateFeedDto, ct);
+        var updatedFeed = await feedService.UpdateFeedAsync(feedId, updateFeedDto, ct);
         
-        return NoContent();
+        return Ok(updatedFeed);
     }
 
     [HttpDelete("{feedId:int}")]

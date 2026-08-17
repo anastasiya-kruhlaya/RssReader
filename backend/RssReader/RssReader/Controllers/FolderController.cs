@@ -60,4 +60,11 @@ public class FolderController(IFolderService folderService) : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("{folderId:int}/feeds")]
+    public async Task<IActionResult> GetFeedsInFolder(int folderId, CancellationToken ct)
+    {
+        var result = await folderService.GetFeedsInFolderAsync(folderId, ct);
+        return Ok(result);
+    }
 }

@@ -14,32 +14,40 @@ export default function Login() {
         dispatch(login({ email, password }));
     }
 
-    if(isAuthenticated) 
-        return <p>Logged in!</p>
+    if(isAuthenticated) {
+        return (
+            <div className="auth-page">
+                    <p className="empty-text">Logged in!</p>
+            </div>
+        );
+    }
     
     return (
-        <form onSubmit={handleSubmit}>
-            <input 
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-                required 
-            />
-            <input 
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required 
-            />
-            <button
-                type="submit"
-                disabled={status === 'loading'}    
-            >
-                {status === 'loading' ? 'Logging in...' : 'Login'}
-            </button>
-            {error && <p>{error}</p>}
-        </form>
+        <div className="auth-page">
+            <h1>Log In</h1>
+            <form onSubmit={handleSubmit}>
+                <input 
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    required 
+                />
+                <input 
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required 
+                />
+                <button
+                    type="submit"
+                    disabled={status === 'loading'}    
+                >
+                    {status === 'loading' ? 'Logging in...' : 'Login'}
+                </button>
+                {error && <p>{error}</p>}
+            </form>
+        </div>
     );
 };

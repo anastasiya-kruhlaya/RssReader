@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; 
 import { getPersonalItems, removeItem, toggleItemFavorite, markItemRead } from 'Actions/feedItemsActions';
 import FeedItemFilters from 'Components/feeditems/FeedItemFilters';
 
 export default function AllFeedItems() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { list: items, loading, error } = useSelector((state) => state.feedItems);
 
     const [filters, setFilters] = useState({
@@ -32,7 +34,9 @@ export default function AllFeedItems() {
         }
     }, [dispatch]);
 
-
+    const handleCardClick = (itemId) => {
+        navigate(`/feed-items/${itemId}`);
+    };
 
     if (loading) return <p className="empty-text">Loading items...</p>;
     if (error) return <p className="error-text">{error}</p>;
@@ -47,7 +51,11 @@ export default function AllFeedItems() {
                 {items.length === 0 && <p className="empty-text">No items yet.</p>}
 
                 {items.map((item) => (
-                    <div className="item-card" key={item.id}>
+                    <div 
+                        className="item-card" 
+                        key={item.id}
+                        onClick={() => handleCardClick(item.id)}
+                    >
                         <h3>{item.title}</h3>
                         <p>{item.description}</p>
                         <div>

@@ -46,7 +46,18 @@ export default function Feeds() {
                 )}
 
                 {feeds.map((feed) => (
-                    <div className="feed-item" key={feed.id}>
+                    <div 
+                        className="feed-item" 
+                        key={feed.id}
+                    >
+                        {feed.iconUrl && (
+                            <img
+                                className="feed-item__icon"
+                                src={feed.iconUrl}
+                                alt=""
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                        )}
                         <Link to={`/feeds/${feed.id}`} className="feed-item__title">
                             {feed.title || feed.url}
                         </Link>

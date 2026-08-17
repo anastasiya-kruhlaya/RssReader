@@ -11,6 +11,14 @@ export default function FeedItemCard({ item }) {
 
     return (
         <div className="item-card">
+            {item.iconUrl && (
+                <img
+                    className="item-card__icon"
+                    src={item.iconUrl}
+                    alt=""
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                />
+            )}
             <Link to={`/feed-items/${item.id}`}><h3>{item.title}</h3></Link>
             <p>{item.description}</p>
             <div className="item-card__actions">
