@@ -1,17 +1,20 @@
+import { useCallback } from 'react';
+
+
 export default function FeedItemFilters({ filters, onChange }) {
-    const handleSelectChange = (field) => (e) => {
+    const handleSelectChange = useCallback((field) => (e) => {
         const value = e.target.value === '' 
             ? undefined 
             : e.target.value === 'true';
         onChange({ ...filters, [field]: value });
-    };
+    }, [filters, onChange]);
 
-    const handleDateChange = (field) => (e) => {
+    const handleDateChange = useCallback((field) => (e) => {
         onChange({ 
             ...filters, 
             [field]: e.target.value || undefined 
         });
-    };
+    }, [filters, onChange]);
     return (
         <div className="filters-bar">
             <select

@@ -43,27 +43,31 @@ export default function FeedItemsByFeed() {
                     </div>
                     <button onClick={() => setShowForm(true)}>Add Item</button>
                 </div>
-                {showForm && (
-                    <FeedItemForm 
-                        feedId={feedId} 
-                        onDone={handleFormDone}
-                    />
-                )}
+                {
+                    showForm && (
+                        <FeedItemForm 
+                            feedId={feedId} 
+                            onDone={handleFormDone}
+                        />
+                    )
+                }
                 {loading && <p className="empty-text">Loading...</p>}
                 {error && <p className="error-text">{error}</p>}
-                {sections.map(([label, list]) =>
-                    list && list.length > 0 && (
-                        <div key={label}>
-                            <div className="group-heading">{label}</div>
-                            {list.map((item) => 
-                                <FeedItemCard 
-                                    key={item.id} 
-                                    item={item} />
-                                )
-                            }
-                        </div>
+                {
+                    sections.map(([label, list]) =>
+                        list && list.length > 0 && (
+                            <div key={label}>
+                                <div className="group-heading">{label}</div>
+                                {list.map((item) => 
+                                    <FeedItemCard 
+                                        key={item.id} 
+                                        item={item} />
+                                    )
+                                }
+                            </div>
+                        )
                     )
-                )}
+                }
             </section>
         </div>
     );

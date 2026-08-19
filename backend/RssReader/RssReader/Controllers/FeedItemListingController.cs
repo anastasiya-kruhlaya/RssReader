@@ -41,9 +41,9 @@ public class FeedItemListingController(IFeedItemService feedItemService) : Contr
 
     [HttpPost]
     public async Task<IActionResult> CreateItem(
-    int feedId,
-    CreateFeedItemDto createFeedItemDto,
-    CancellationToken ct = default)
+        int feedId,
+        CreateFeedItemDto createFeedItemDto,
+        CancellationToken ct = default)
     {
         var result = await feedItemService.CreateFeedItemAsync(feedId, createFeedItemDto, ct);
         return Ok(result);

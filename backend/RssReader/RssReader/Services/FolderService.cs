@@ -98,13 +98,15 @@ public class FolderService(
 
         var feeds = await folderRepository.GetFeedsInFolderAsync(folderId, ct);
 
-        return feeds.Select(f => new DashboardFeedDto
-        {
-            Id = f.Id,
-            Url = f.Url,
-            Title = f.Title,
-            IconUrl = f.IconUrl,
-            FeedItemCount = f.FeedItems?.Count ?? 0
-        }).ToList();
+        return feeds
+            .Select(f => new DashboardFeedDto
+            {
+                Id = f.Id,
+                Url = f.Url,
+                Title = f.Title,
+                IconUrl = f.IconUrl,
+                FeedItemCount = f.FeedItems?.Count ?? 0
+            })
+            .ToList();
     }
 }

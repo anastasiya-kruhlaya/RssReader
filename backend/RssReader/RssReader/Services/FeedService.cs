@@ -1,4 +1,5 @@
-﻿using RssReader.DTOs.Feed;
+﻿using AutoMapper;
+using RssReader.DTOs.Feed;
 using RssReader.Models;
 using RssReader.Repositories.Interfaces;
 using RssReader.Repositories.UnitOfWork;
@@ -10,6 +11,7 @@ public class FeedService(
     IFeedRepository feedRepository,
     IFolderRepository folderRepository,
     IUnitOfWork unitOfWork,
+    IMapper mapper,
     CurrentUserService currentUserService) : IFeedService
 {
     public async Task<List<ResponseFeedDto>> GetAllFeedsAsync(CancellationToken ct = default)
@@ -89,16 +91,14 @@ public class FeedService(
 
     public async Task<ResponseFeedDto> UpdateFeedAsync(int feedId, UpdateFeedDto updateFeedDto, CancellationToken ct = default)
     {
-        var feed = await feedRepository.GetByIdAsync(feedId, ct)
+        Feed feed = await feedRepository.GetByIdAsync(feedId, ct)
             ?? throw new KeyNotFoundException($"Feed with id {feedId} was not found");
 
-        if (updateFeedDto.Title != null)
-            feed.Title = updateFeedDto.Title;
+        string previousUrlValue = feed.Url;
 
-        if (updateFeedDto.IconUrl != null)
-            feed.IconUrl = updateFeedDto.IconUrl;
+        mapper.Map(updateFeedDto, feed);
 
-        if (feed.Url != updateFeedDto.Url)
+        if (previousUrlValue != updateFeedDto.Url) 
         {
             var isValid = await ValidateFeedAsync(updateFeedDto.Url);
             if (!isValid)
@@ -111,13 +111,7 @@ public class FeedService(
         await feedRepository.UpdateAsync(feed, ct);
         await unitOfWork.CommitAsync(ct);
 
-        return new ResponseFeedDto
-        {
-            Id = feed.Id,
-            Url = feed.Url,
-            Title = feed.Title,
-            IconUrl = feed.IconUrl
-        };
+        return mapper.Map<ResponseFeedDto>(feed);
     }
 
     private Task<bool> ValidateFeedAsync(string url) => Task.FromResult(true);

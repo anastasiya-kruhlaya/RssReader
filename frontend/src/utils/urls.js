@@ -3,9 +3,9 @@ const ADD_FEED_URL = '/feeds';
 const EDIT_FEED_URL = (id) => `/feeds/${id}`;
 const REMOVE_FEED_URL = (id) => `/feeds/${id}`;
 
-const GET_PROFILE_URL = '/user/me';
-const UPDATE_PROFILE_URL = '/user/me';
-const DELETE_ACCOUNT_URL = '/user/me';
+const GET_PROFILE_URL = '/user/admin';
+const UPDATE_PROFILE_URL = '/user/admin';
+const DELETE_ACCOUNT_URL = '/user/admin';
 
 const LOGIN_URL = '/auth/login';
 const REGISTER_URL = '/auth/register';

@@ -23,7 +23,10 @@ export default function Register() {
         <div className="auth-page">
             <div className="page">
                 <h1>Create Account</h1>
-                <form onSubmit={handleSubmit} className="form-row" style={{ flexDirection: 'column' }}>
+                <form 
+                    onSubmit={handleSubmit} 
+                    className="form-row" 
+                >
                     <input
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}

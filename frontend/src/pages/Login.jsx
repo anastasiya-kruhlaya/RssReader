@@ -3,6 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 
 
+const FormStatus = Object.freeze({
+    Loading: 'loading',
+});
+
 export default function Login() {
     const dispatch = useDispatch();
     const { status, error, isAuthenticated } = useSelector((state) => state.auth);
@@ -17,7 +21,7 @@ export default function Login() {
     if(isAuthenticated) {
         return (
             <div className="auth-page">
-                    <p className="empty-text">Logged in!</p>
+                <p className="empty-text">Logged in!</p>
             </div>
         );
     }
@@ -42,9 +46,9 @@ export default function Login() {
                 />
                 <button
                     type="submit"
-                    disabled={status === 'loading'}    
+                    disabled={status === FormStatus.Loading}    
                 >
-                    {status === 'loading' ? 'Logging in...' : 'Login'}
+                    {status === FormStatus.Loading ? 'Logging in...' : 'Login'}
                 </button>
                 {error && <p>{error}</p>}
             </form>

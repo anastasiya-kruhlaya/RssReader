@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getItem, removeItem, toggleItemFavorite } from 'Actions/feedItemsActions';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 
 export default function FeedItemDetails() {
@@ -22,6 +22,13 @@ export default function FeedItemDetails() {
         }
     }
 
+    const onMarkFavoriteClick = useCallback(() => {
+        dispatch(toggleItemFavorite({
+            itemId: item.id,
+            isFavorite: item.isFavorite
+        }))
+    }, [dispatch, item])
+
     if(loading) return <p className="empty-text">Loading...</p>
     if(error) return <p className="error-text">{error}</p>
     if(!item) return null
@@ -38,13 +45,7 @@ export default function FeedItemDetails() {
                 <div className="item-card__actions">
                     <button
                         className="ghost"
-                        onClick={() => 
-                            dispatch(toggleItemFavorite({ 
-                                itemId: item.id, 
-                                isFavorite: !item.isFavorite 
-                            }
-                        )
-                    )}
+                        onClick={onMarkFavoriteClick}
                     >
                         {item.isFavorite ? '★ Favorited' : '☆ Favorite'}
                     </button>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { addFeed, editFeed } from 'Actions/feedsActions';
 import { getFeeds } from '../../reducers/feedsReducer';
@@ -9,9 +9,9 @@ export default function FeedForm({ editingFeed, onDone }) {
     const [title, setTitle] = useState(editingFeed?.title || '');
     const [iconUrl, setIconUrl] = useState(editingFeed?.iconUrl || '');
     const [error, setError] = useState(null);
-    const isEditing = Boolean(editingFeed);
+    const isEditing = !!editingFeed;
 
-    const handleSubmit = async (e) => {
+    const handleSubmit =useCallback(async (e) => {
         e.preventDefault();
         setError(null);
 
@@ -37,7 +37,7 @@ export default function FeedForm({ editingFeed, onDone }) {
         } else {
             setError(result.payload || 'Something went wrong');
         }
-    };
+    }, [editingFeed, onDone]);
 
     return (
         <form className="form-row" onSubmit={handleSubmit}>
@@ -61,7 +61,13 @@ export default function FeedForm({ editingFeed, onDone }) {
                 onChange={(e) => setIconUrl(e.target.value)}
             />
             <button type="submit">{isEditing ? 'Save' : 'Create Feed'}</button>
-            <button type="button" className="ghost" onClick={onDone}>Cancel</button>
+            <button 
+                type="button" 
+                className="ghost" 
+                onClick={onDone}
+            >
+                Cancel
+            </button>
             {error && <p className="error-text">{error}</p>}
         </form>
     );

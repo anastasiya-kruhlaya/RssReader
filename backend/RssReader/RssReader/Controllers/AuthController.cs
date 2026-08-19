@@ -41,6 +41,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         await authService.ChangePasswordAsync(userId, dto, ct);
+
         return NoContent();
     }
 }

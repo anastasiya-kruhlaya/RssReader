@@ -19,14 +19,19 @@ export default function FolderFeeds() {
                 {loading && <p className="empty-text">Loading...</p>}
                 {error && <p className="error-text">{error}</p>}
                 {!loading && feeds.length === 0 && <p className="empty-text">No feeds in this folder.</p>}
-                {feeds.map((feed) => (
-                    <div className="feed-item" key={feed.id}>
-                        <Link to={`/feeds/${feed.id}`} className="feed-item__title">
-                            {feed.title || feed.url}
-                        </Link>
-                        <span className="feed-item__count">{feed.feedItemCount} items</span>
-                    </div>
-                ))}
+                {
+                    feeds.map((feed) => (
+                        <div className="feed-item" key={feed.id}>
+                            <Link 
+                                to={`/feeds/${feed.id}`} 
+                                className="feed-item__title"
+                            >
+                                {feed.title || feed.url}
+                            </Link>
+                            <span className="feed-item__count">{feed.feedItemCount} items</span>
+                        </div>)
+                    )
+                }
             </section>
         </div>
     );

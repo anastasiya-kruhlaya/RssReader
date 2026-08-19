@@ -1,6 +1,13 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { changePassword } from 'Actions/authActions';
+
+
+const FormStatus = Object.freeze({
+    Idle: 'idle',
+    Saving: 'saving',
+    Saved: 'saved'
+});
 
 export default function ChangePasswordForm() {
     const dispatch = useDispatch();
@@ -9,25 +16,29 @@ export default function ChangePasswordForm() {
     const [status, setStatus] = useState(null);
     const [error, setError] = useState(null);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = useCallback(async (e) => {
         e.preventDefault();
         setError(null);
-        setStatus('saving');
+        setStatus(FormStatus.Saving);
 
         const result = await dispatch(changePassword({ currentPassword, newPassword }));
 
         if (changePassword.fulfilled.match(result)) {
-            setStatus('saved');
+            setStatus(FormStatus.Saved);
             setCurrentPassword('');
             setNewPassword('');
         } else {
-            setStatus(null);
+            setStatus(FormStatus.Idle);
             setError(result.payload || 'Something went wrong');
         }
-    };
+    }, [dispatch, currentPassword, newPassword]);
 
     return (
-        <form className="form-row" onSubmit={handleSubmit} style={{ flexDirection: 'column' }}>
+        <form 
+            className="form-row" 
+            onSubmit={handleSubmit} 
+            style={{ flexDirection: 'column' }}
+        >
             <input
                 type="password"
                 placeholder="Current password"
@@ -43,10 +54,10 @@ export default function ChangePasswordForm() {
                 required
                 minLength={6}
             />
-            <button type="submit" disabled={status === 'saving'}>
-                {status === 'saving' ? 'Saving...' : 'Change Password'}
+            <button type="submit" disabled={status === FormStatus.Saving}>
+                {status === FormStatus.Saving ? 'Saving...' : 'Change Password'}
             </button>
-            {status === 'saved' && <p className="empty-text">Password updated.</p>}
+            {status === FormStatus.Saved && <p className="empty-text">Password updated.</p>}
             {error && <p className="error-text">{error}</p>}
         </form>
     );

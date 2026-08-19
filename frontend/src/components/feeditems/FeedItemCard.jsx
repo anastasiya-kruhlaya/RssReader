@@ -1,50 +1,62 @@
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { markItemRead, toggleItemFavorite, removeItem } from 'Actions/feedItemsActions';
+import { useCallback } from 'react';
 
 export default function FeedItemCard({ item }) {
     const dispatch = useDispatch();
+
+    const {
+        id,
+        title,
+        description,
+        iconUrl,
+        isRead,
+        isFavorite
+    } = item;
 
     const handleDelete = () => {
         if (window.confirm('Remove this item?')) dispatch(removeItem(item.id));
     };
 
+    const onMarkReadClick = useCallback(() => {
+        dispatch(markItemRead({
+            itemId: id, 
+            isRead: !isRead
+        }))
+    },[dispatch, id, isRead]);
+    
+    const onMarkFavoriteClick = useCallback(() => {
+        dispatch(markItemFavorite({
+            itemId: id, 
+            isFavorite: !isFavorite
+        }))
+    },[dispatch, id, isFavorite]);
+
     return (
         <div className="item-card">
-            {item.iconUrl && (
+            {iconUrl && (
                 <img
                     className="item-card__icon"
-                    src={item.iconUrl}
+                    src={iconUrl}
                     alt=""
                     onError={(e) => { e.target.style.display = 'none'; }}
                 />
             )}
-            <Link to={`/feed-items/${item.id}`}><h3>{item.title}</h3></Link>
-            <p>{item.description}</p>
+            <Link to={`/feed-items/${id}`}><h3>{title}</h3></Link>
+            <p>{description}</p>
             <div className="item-card__actions">
                 <button
                     className="ghost"
-                    onClick={() => 
-                        dispatch(markItemRead({ 
-                            itemId: item.id, 
-                            isRead: !item.isRead 
-                        }
-                    )
-                )}
+                    onClick={onMarkReadClick}
                 >
-                    {item.isRead ? 'Mark unread' : 'Mark read'}
+                    {isRead ? 'Mark unread' : 'Mark read'}
                 </button>
                 <button
                     className="ghost"
-                    onClick={() => 
-                        dispatch(toggleItemFavorite({ 
-                            itemId: item.id, 
-                            isFavorite: !item.isFavorite 
-                        }
-                    )
-                )}
+                    onClick={onMarkFavoriteClick}
                 >
-                    {item.isFavorite ? '★ Favorited' : '☆ Favorite'}
+                    {isFavorite ? '★ Favorited' : '☆ Favorite'}
                 </button>
                 <button className="danger" onClick={handleDelete}>Delete</button>
             </div>

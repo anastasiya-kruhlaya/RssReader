@@ -27,11 +27,14 @@ export default function UserMenu() {
     const closeMenu = () => setOpen(false);
 
     return (
-        <div className="user-menu" ref={menuRef}>
+        <div 
+            className="user-menu" 
+            ref={menuRef}
+        >
             <button 
                 className="user-menu__trigger" 
-                onClick={
-                    () => setOpen((o) => !o)
+                onClick={() => 
+                    setOpen((o) => !o)
                 }
             >
                 {user?.userName || user?.email || 'Account'} ▾
