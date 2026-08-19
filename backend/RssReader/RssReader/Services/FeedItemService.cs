@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using AutoMapper;
+using Azure;
 using Microsoft.EntityFrameworkCore;
 using RssReader.Constants;
 using RssReader.DTOs.FeedItem;
@@ -16,7 +17,8 @@ public class FeedItemService(
     FeedItemRepository feedItemRepository,
     IUserFeedItemRepository userFeedItemRepository,
     IUnitOfWork unitOfWork,
-    CurrentUserService currentUserService) : IFeedItemService
+    CurrentUserService currentUserService,
+    IMapper mapper) : IFeedItemService
 {
     public async Task<List<FeedItemDto>> GetGlobalFeedItemsAsync(
        GlobalFeedItemsFilter globalFeedItemsFilter,
@@ -93,16 +95,24 @@ public class FeedItemService(
         return GroupByDate(items);
     }
 
-    public async Task<FeedItemDto> GetFeedItemAsync(
-        int feedItemId, CancellationToken ct = default)
+    public async Task<FeedItemDto> GetFeedItemAsync(int feedItemId, CancellationToken ct = default)
     {
         int userId = currentUserService.UserId;
 
-        return await feedItemRepository
+        var item = await feedItemRepository
             .GetSingleQuery(feedItemId)
             .Select(ToDtoPersonal(userId))
-            .FirstOrDefaultAsync(ct)
-            ?? throw new KeyNotFoundException($"Feed Item with Id {feedItemId} was not found");
+            .FirstOrDefaultAsync(ct);
+        
+        if(item is null)
+        {
+            throw new KeyNotFoundException($"Feed Item with Id {feedItemId} was not found");
+        }
+
+        await userFeedItemRepository.MarkAsReadAsync(userId, feedItemId, ct:ct);
+        await unitOfWork.CommitAsync(ct);
+
+        return item;
     }
 
     public async Task MarkAsReadAsync(int feedItemId, bool isRead = true, CancellationToken ct = default)
@@ -113,7 +123,7 @@ public class FeedItemService(
 
     public async Task RemoveFeedItemAsync(int feedItemId, CancellationToken ct = default)
     {
-        await userFeedItemRepository.MarkAsRemovedAsync(currentUserService.UserId, feedItemId, isRemoved: true, ct);
+        await userFeedItemRepository.MarkAsRemovedAsync(currentUserService.UserId, feedItemId, ct: ct);
         await unitOfWork.CommitAsync(ct);
     }
 
@@ -156,11 +166,11 @@ public class FeedItemService(
     }
 
     private async Task<List<FeedItemDto>> GetPagedFeedItemsAsync(
-    IQueryable<FeedItem> query,
-    Expression<Func<FeedItem, FeedItemDto>> projection,
-    int pageNumber,
-    int pageSize,
-    CancellationToken ct = default)
+        IQueryable<FeedItem> query,
+        Expression<Func<FeedItem, FeedItemDto>> projection,
+        int pageNumber,
+        int pageSize,
+        CancellationToken ct = default)
     {
         ValidatePagination(pageNumber, pageSize);
 
@@ -199,4 +209,22 @@ public class FeedItemService(
         IsRead = false,
         IsFavorite = false
     };
+
+    public async Task<FeedItemDto> CreateFeedItemAsync(
+        int feedId,
+        CreateFeedItemDto createFeedItemDto,
+        CancellationToken ct = default)
+    {
+        var feedExists = await feedItemRepository.FeedExistsAsync(feedId, ct);
+        if (!feedExists)
+            throw new KeyNotFoundException($"Feed with Id {feedId} was not found");
+
+        var feedItem = mapper.Map<FeedItem>(createFeedItemDto);
+        feedItem.FeedId = feedId;
+
+        await feedItemRepository.AddAsync(feedItem, ct);
+        await unitOfWork.CommitAsync(ct);
+
+        return mapper.Map<FeedItemDto>(feedItem);
+    }
 }

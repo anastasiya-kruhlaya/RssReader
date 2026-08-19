@@ -49,4 +49,22 @@ public class AuthService(
             Email = user.Email
         };
     }
+
+    public Task LogoutAsync(CancellationToken ct = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task ChangePasswordAsync(int userId, ChangePasswordDto dto, CancellationToken ct = default)
+    {
+        var user = await userRepository.GetByIdAsync(userId)
+            ?? throw new KeyNotFoundException("User not found");
+
+        if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
+            throw new UnauthorizedAccessException("Current password is incorrect");
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        await userRepository.UpdateAsync(user, ct);
+        await unitOfWork.CommitAsync(ct);
+    }
 }

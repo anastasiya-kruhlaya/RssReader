@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RssReader.Constants;
 using RssReader.DTOs.FeedItem;
 using RssReader.Services;
+using RssReader.Services.Interfaces;
 using System.Security.Claims;
 
 namespace RssReader.Controllers;
@@ -11,7 +12,7 @@ namespace RssReader.Controllers;
 [ApiController]
 [Authorize]
 [Route("api/feed-items")]
-public class FeedItemController(FeedItemService feedItemService) : ControllerBase
+public class FeedItemController(IFeedItemService feedItemService) : ControllerBase
 {
     [AllowAnonymous]
     [HttpGet("global")]

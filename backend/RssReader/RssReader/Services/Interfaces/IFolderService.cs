@@ -1,4 +1,5 @@
-﻿using RssReader.DTOs.Folder;
+﻿using RssReader.DTOs.Feed;
+using RssReader.DTOs.Folder;
 
 namespace RssReader.Services.Interfaces;
 
@@ -10,4 +11,5 @@ public interface IFolderService
     Task AddFeedToFolderAsync(int folderId, int feedId, CancellationToken ct = default);
     Task RemoveFeedFromFolderAsync(int folderId, int feedId, CancellationToken ct = default);
     Task<List<ResponseFolderDto>> GetFoldersWithFeedCountsAsync(CancellationToken ct = default);
+    Task<List<DashboardFeedDto>> GetFeedsInFolderAsync(int folderId, CancellationToken ct = default);
 }

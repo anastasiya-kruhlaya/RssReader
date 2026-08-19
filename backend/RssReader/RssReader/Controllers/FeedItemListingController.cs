@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RssReader.Constants;
+using RssReader.DTOs.FeedItem;
 using RssReader.Services.Interfaces;
 
 namespace RssReader.Controllers;
@@ -35,6 +36,16 @@ public class FeedItemListingController(IFeedItemService feedItemService) : Contr
             pageNumber,
             pageSize,
             ct);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateItem(
+        int feedId,
+        CreateFeedItemDto createFeedItemDto,
+        CancellationToken ct = default)
+    {
+        var result = await feedItemService.CreateFeedItemAsync(feedId, createFeedItemDto, ct);
         return Ok(result);
     }
 }

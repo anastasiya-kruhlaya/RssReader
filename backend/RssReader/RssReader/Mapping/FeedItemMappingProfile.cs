@@ -11,5 +11,15 @@ public class FeedItemMappingProfile : Profile
         CreateMap<FeedItem, FeedItemDto>()
             .ForMember(dest => dest.IsRead, opt => opt.MapFrom(src => false))
             .ForMember(dest => dest.IsFavorite, opt => opt.MapFrom(src => false));
+
+        CreateMap<FeedItem, FeedItemDto>()
+            .ForMember(dest => dest.IsRead,
+                opt => opt.MapFrom((src, _, _, ctx) =>
+                    src.UserFeedItems.Any(uf => uf.UserId == (int)ctx.Items["UserId"] && uf.IsRead)))
+            .ForMember(dest => dest.IsFavorite,
+                opt => opt.MapFrom((src, _, _, ctx) =>
+                    src.UserFeedItems.Any(uf => uf.UserId == (int)ctx.Items["UserId"] && uf.IsFavorite)));
+
+        CreateMap<CreateFeedItemDto, FeedItem>();
     }
 }
